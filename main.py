@@ -2,8 +2,10 @@ import os
 import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, font
+
 import openai
 from dotenv import load_dotenv
+
 
 # Load API Key
 def load_api_key():
@@ -14,7 +16,9 @@ def load_api_key():
         raise ValueError("Error: OpenAI API key not found. Please set OPENAI_API_KEY in a .env file.")
     return api_key
 
+
 client = openai.OpenAI(api_key=load_api_key())
+
 
 # Convert Cypress test content to Gherkin syntax
 def generate_gherkin_syntax(test_content):
@@ -36,11 +40,13 @@ def generate_gherkin_syntax(test_content):
         messagebox.showerror("Error", str(e))
         return ""
 
+
 # Read Cypress test file
 def read_cypress_test(file_path):
     """Read the contents of a Cypress test case file."""
     with open(file_path, "r", encoding="utf-8") as file:
         return file.read()
+
 
 # Process directory and save converted files
 def process_directory(source_dir, output_dir, log_widget, preview_widget):
@@ -78,6 +84,7 @@ def process_directory(source_dir, output_dir, log_widget, preview_widget):
     log_widget.update_idletasks()
     messagebox.showinfo("Success", f"Conversion complete! Files saved in:\n{output_dir}")
 
+
 # Start processing in a separate thread
 def start_conversion():
     source_dir = source_dir_entry.get()
@@ -89,6 +96,7 @@ def start_conversion():
 
     # Run process in a separate thread to avoid UI freeze
     threading.Thread(target=process_directory, args=(source_dir, output_dir, log_output, preview_text), daemon=True).start()
+
 
 # UI Setup
 root = tk.Tk()

@@ -105,8 +105,16 @@ Verify the version of `Python` being used by `pyenv`:
 
 Install all packages specified in `Pipfile.lock.`:
 
+    pipenv install
+
+Checks for `PyUp` Safety security vulnerabilities and against `PEP 508` markers provided in `Pipfile`:
+
+    pipenv check
+
+Installs all packages specified in `Pipfile.lock`:
+
     pipenv sync
 
-Show a graph of your installed dependencies:
+Displays currently-installed dependency graph information:
 
     pipenv graph

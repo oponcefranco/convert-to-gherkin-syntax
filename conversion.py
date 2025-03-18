@@ -1,10 +1,12 @@
-import openai
-import os
 import logging
+import os
+
+import openai
 from dotenv import load_dotenv
 
 # Configure logging
 logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
+
 
 def load_api_key():
     """Load OpenAI API key from environment variables."""
@@ -14,9 +16,11 @@ def load_api_key():
         raise ValueError("Error: OpenAI API key not found. Please set OPENAI_API_KEY in a .env file.")
     return api_key
 
+
 def get_openai_client():
     """Returns an OpenAI client with API key loaded."""
     return openai.OpenAI(api_key=load_api_key())
+
 
 system_message = """You are an expert in converting Cypress test cases into Behaviour-Driven Development (BDD) using Gherkin syntax. 
 Follow these guidelines for the conversion:
@@ -46,10 +50,12 @@ Follow these guidelines for the conversion:
 - Ensure the output is properly formatted for readability.
 """
 
+
 def read_cypress_test(file_path):
     """Read the contents of a Cypress test case file."""
     with open(file_path, "r", encoding="utf-8") as file:
         return file.read()
+
 
 def generate_gherkin_syntax(test_content):
     """Convert Cypress test content to Gherkin syntax using OpenAI."""
@@ -71,6 +77,7 @@ def generate_gherkin_syntax(test_content):
         logging.error(f"Unexpected error: {e}")
 
     return ""
+
 
 def process_directory(directory_path):
     """Recursively process all .cy.ts files in the given directory and subdirectories."""
@@ -95,6 +102,7 @@ def process_directory(directory_path):
                         file.write(gherkin_syntax)
                     print(f"Gherkin syntax saved to {output_file}")
 
+
 def main():
     """Main function to process a directory."""
     while True:
@@ -103,6 +111,7 @@ def main():
             process_directory(directory_path)
             break
         print("Invalid directory. Try again.")
+
 
 if __name__ == "__main__":
     main()
