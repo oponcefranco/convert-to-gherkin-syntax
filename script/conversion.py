@@ -22,7 +22,7 @@ def get_openai_client():
     return openai.OpenAI(api_key=load_api_key())
 
 
-system_message = """You are an expert in converting Cypress test cases into Behaviour-Driven Development (BDD) using Gherkin syntax. 
+PROMPT_MESSAGE = """You are an expert in converting Cypress test cases into Behaviour-Driven Development (BDD) using Gherkin syntax. 
 Follow these guidelines for the conversion:
 
 - Use the website https://cucumber.io/docs/reference/ as a reference for the most appropriate Gherkin syntax.
@@ -64,7 +64,7 @@ def generate_gherkin_syntax(test_content):
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": system_message},
+                {"role": "system", "content": PROMPT_MESSAGE},
                 {"role": "user", "content": f"Cypress Test:\n{test_content}\n\nGherkin Syntax:"},
             ],
             max_tokens=500,
@@ -72,9 +72,11 @@ def generate_gherkin_syntax(test_content):
         return response.choices[0].message.content.strip()
 
     except openai.OpenAIError as e:
-        logging.error(f"OpenAI API error: {e}")
+        # logging.error(f"OpenAI API error: {e}")
+        logging.error("%s OpenAI API error: %s", type(e), e)
     except Exception as e:
-        logging.error(f"Unexpected error: {e}")
+        # logging.error(f"Unexpected error: {e}")
+        logging.error("%s Unexpected error: %s", type(e), e)
 
     return ""
 

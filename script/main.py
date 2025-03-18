@@ -1,51 +1,19 @@
+"""
+Script to convert Cypress specs into Gherkin Syntax
+"""
+
 import os
 import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, font
 
 import openai
-from dotenv import load_dotenv
 
+from conversion import load_api_key, generate_gherkin_syntax, read_cypress_test
 
 # Load API Key
-def load_api_key():
-    """Load OpenAI API key from environment variables."""
-    load_dotenv()
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise ValueError("Error: OpenAI API key not found. Please set OPENAI_API_KEY in a .env file.")
-    return api_key
-
-
+load_api_key()
 client = openai.OpenAI(api_key=load_api_key())
-
-
-# Convert Cypress test content to Gherkin syntax
-def generate_gherkin_syntax(test_content):
-    """Convert Cypress test content to Gherkin syntax using OpenAI."""
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are an expert in converting Cypress test cases to Gherkin syntax."},
-                {"role": "user", "content": f"Cypress Test:\n{test_content}\n\nConvert this to Gherkin syntax:"},
-            ],
-            max_tokens=500,
-        )
-        return response.choices[0].message.content.strip()
-    except openai.OpenAIError as e:
-        messagebox.showerror("OpenAI API Error", str(e))
-        return ""
-    except Exception as e:
-        messagebox.showerror("Error", str(e))
-        return ""
-
-
-# Read Cypress test file
-def read_cypress_test(file_path):
-    """Read the contents of a Cypress test case file."""
-    with open(file_path, "r", encoding="utf-8") as file:
-        return file.read()
 
 
 # Process directory and save converted files
@@ -61,10 +29,10 @@ def process_directory(source_dir, output_dir, log_widget, preview_widget):
     log_widget.insert(tk.END, "Processing started...\n")
     log_widget.update_idletasks()
 
-    for root, _, files in os.walk(source_dir):
+    for root_dir, _, files in os.walk(source_dir):
         for file_name in files:
             if file_name.endswith(".cy.ts"):
-                file_path = os.path.join(root, file_name)
+                file_path = os.path.join(root_dir, file_name)
                 test_content = read_cypress_test(file_path)
                 gherkin_syntax = generate_gherkin_syntax(test_content)
 
@@ -87,6 +55,7 @@ def process_directory(source_dir, output_dir, log_widget, preview_widget):
 
 # Start processing in a separate thread
 def start_conversion():
+    """ selection of source and destination directories """
     source_dir = source_dir_entry.get()
     output_dir = output_dir_entry.get()
 
