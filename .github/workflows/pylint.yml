@@ -1,6 +1,8 @@
 name: Pylint
 
 on: [push]
+env:
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
 jobs:
   build:
