@@ -51,6 +51,7 @@ def process_directory(source_dir, output_dir, log_widget, preview_widget):
 
 # Start processing in a separate thread
 def start_conversion():
+    """ selection of source and destination directories """
     source_dir = source_dir_entry.get()
     output_dir = output_dir_entry.get()
 
