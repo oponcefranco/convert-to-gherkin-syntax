@@ -1,3 +1,7 @@
+"""
+Script to convert Cypress specs into Gherkin Syntax
+"""
+
 import os
 import threading
 import tkinter as tk
