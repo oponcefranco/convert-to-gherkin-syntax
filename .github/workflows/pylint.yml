@@ -33,5 +33,7 @@ jobs:
 
     # Linting with Pylint
     - name: Analysing the code with pylint
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         pylint $(git ls-files '*.py')
