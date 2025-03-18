@@ -12,18 +12,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # Set up Python
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-
     # Set Environment Variables
     - name: Set Environment Variables
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> $GITHUB_ENV
+
+    # Set up Python
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
 
     # Install dependencies
     - name: Install dependencies
@@ -33,7 +33,5 @@ jobs:
 
     # Linting with Pylint
     - name: Analysing the code with pylint
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         pylint $(git ls-files '*.py')
