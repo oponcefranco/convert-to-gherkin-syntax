@@ -25,10 +25,10 @@ def process_directory(source_dir, output_dir, log_widget, preview_widget):
     log_widget.insert(tk.END, "Processing started...\n")
     log_widget.update_idletasks()
 
-    for rootDir, _, files in os.walk(source_dir):
+    for root_dir, _, files in os.walk(source_dir):
         for file_name in files:
             if file_name.endswith(".cy.ts"):
-                file_path = os.path.join(rootDir, file_name)
+                file_path = os.path.join(root_dir, file_name)
                 test_content = read_cypress_test(file_path)
                 gherkin_syntax = generate_gherkin_syntax(test_content)
 
