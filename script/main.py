@@ -74,7 +74,7 @@ root.geometry("1024x1200")
 root.configure(bg="white")
 
 # Define monospaced font
-monospace_font = font.Font(family="Courier", size=10)
+monospace_font = font.Font(family="Monaco", size=11)
 
 # Source Directory Selection
 tk.Label(root, text="Select Source Directory:", bg="white").grid(row=0, column=0, padx=5, pady=5, sticky="w")
@@ -94,7 +94,7 @@ tk.Button(root, text="Exit", fg="black", command=root.quit).grid(row=2, column=2
 
 # Log Output with Monospaced Font
 tk.Label(root, text="Process Log:", bg="white").grid(row=3, column=0, padx=5, pady=5, sticky="w")
-log_output = scrolledtext.ScrolledText(root, width=120, height=10, wrap=tk.WORD, font=monospace_font)
+log_output = scrolledtext.ScrolledText(root, width=120, height=20, wrap=tk.WORD, font=monospace_font)
 log_output.grid(row=4, column=0, columnspan=3, padx=5, pady=5)
 
 # Preview Window with Monospaced Font

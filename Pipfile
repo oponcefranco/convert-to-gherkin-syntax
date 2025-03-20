@@ -11,6 +11,9 @@ pytz = "*"
 tk = "*"
 dotenv = "*"
 pylint = "*"
+gql = "*"
+requests = "*"
+aiohttp = "*"
 
 [dev-packages]
 
