@@ -33,7 +33,7 @@ client_secret = os.getenv("CLIENT_SECRET")
 headers = {"Content-type": "application/json", "Accept": "text/plain"}
 auth_data = {"client_id": client_id, "client_secret": client_secret}
 response = requests.post(
-    f"{xray_cloud_base_url}/authenticate", data=json.dumps(auth_data), headers=headers
+    f"{xray_cloud_base_url}/authenticate", data=json.dumps(auth_data), headers=headers, timeout=30
 )
 auth_token = response.json()
 

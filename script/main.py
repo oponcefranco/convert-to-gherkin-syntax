@@ -9,7 +9,7 @@ from tkinter import filedialog, messagebox, scrolledtext, font
 
 import openai
 
-from conversion import load_api_key, generate_gherkin_syntax, read_cypress_test
+from .conversion import load_api_key, generate_gherkin_syntax, read_cypress_test
 
 # Load API Key
 load_api_key()

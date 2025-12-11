@@ -47,7 +47,7 @@ def generate_gherkin_syntax(test_content):
     except openai.OpenAIError as e:
         # logging.error(f"OpenAI API error: {e}")
         logging.error("%s OpenAI API error: %s", type(e), e)
-    except Exception as e:
+    except (ValueError, KeyError, IndexError, AttributeError, TypeError) as e:
         # logging.error(f"Unexpected error: {e}")
         logging.error("%s Unexpected error: %s", type(e), e)
 
