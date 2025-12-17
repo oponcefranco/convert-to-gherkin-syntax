@@ -1,6 +1,14 @@
 # Convert Cypress Specs to Gherkin Syntax
 
-This Python script provides a GUI application that converts Cypress test specs (.cy.ts files) into Gherkin syntax using the OpenAI API. The functionality is divided into three main components:
+A Python-based tool that automates the conversion of Cypress test specifications (`.cy.ts` files) into Behaviour-Driven Development (BDD) Gherkin syntax using the OpenAI API. This tool bridges the gap between technical test automation and business-readable test documentation.
+
+## Overview
+
+This application provides two modes of operation:
+- **GUI Mode**: Interactive tkinter-based interface for easy file s****election and conversion
+- **CLI Mode**: Command-line interface for scriptable batch processing
+
+The tool leverages OpenAI's GPT-4 model to intelligently convert Cypress test code into well-structured Gherkin scenarios following BDD best practices.
 
 ## Core Functionality
 ### 1. Cypress to Gherkin Conversion:
@@ -40,8 +48,39 @@ This Python script provides a GUI application that converts Cypress test specs (
 
 This script automates the tedious process of converting Cypress test specs into readable Gherkin syntax (e.g., Given-When-Then scenarios), improving test documentation and readability.
 
+## 📁 Repository Structure
+
+```
+convert-to-gherkin-syntax/
+├── script/                      # Main application code
+│   ├── __init__.py             # Package initializer
+│   ├── main.py                 # GUI application entry point
+│   └── conversion.py           # Core conversion logic and API integration
+├── data/                        # Configuration and prompts
+│   └── prompt.py               # OpenAI prompt template for conversion
+├── xray/                        # Xray Test Management integration
+│   └── test_repository/        # Scripts for Xray API interactions
+│       └── get_tests_in_folder.py  # Fetch tests from Xray folders
+├── .github/                     # GitHub workflows and CI/CD
+│   └── workflows/
+│       └── pylint.yml          # Python linting workflow
+├── .env.example                 # Environment variables template
+├── Pipfile                      # Pipenv dependency specification
+├── Pipfile.lock                 # Locked dependencies
+├── requirements.txt             # Pip requirements file
+├── .pylintrc                    # Pylint configuration
+└── README.md                    # This file
+```
+
+### Key Files
+
+- **script/main.py**: GUI application using tkinter for interactive conversion
+- **script/conversion.py**: Core functions for reading Cypress files, calling OpenAI API, and generating Gherkin syntax
+- **data/prompt.py**: Contains the system prompt that guides GPT-4 in converting tests to Gherkin format
+- **xray/test_repository/get_tests_in_folder.py**: Optional integration with Xray Test Management via GraphQL
+
 ⸻
-# Instructions
+# Getting Started
 
 ## Clone Repository
 
@@ -166,3 +205,205 @@ Installs all packages specified in `Pipfile.lock`:
 Displays currently-installed dependency graph information:
 
     pipenv graph
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+Create a `.env` file in the project root directory based on `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file and add your API keys:
+
+```bash
+# Required for Cypress to Gherkin conversion
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Optional: Only needed if using Xray Test Management integration
+XRAY_CLIENT_ID=your_xray_client_id
+XRAY_CLIENT_SECRET=your_xray_client_secret
+```
+
+**Getting an OpenAI API Key:**
+1. Visit [OpenAI Platform](https://platform.openai.com/)
+2. Sign up or log in to your account
+3. Navigate to API Keys section
+4. Create a new API key
+5. Copy the key to your `.env` file
+
+## 🚀 Running the Application
+
+### Method 1: GUI Mode (Recommended for Interactive Use)
+
+Launch the graphical user interface:
+
+```bash
+python -m script.main
+```
+
+**GUI Features:**
+- Browse and select source directory containing `.cy.ts` files
+- Choose destination directory for converted Gherkin files
+- Real-time conversion progress log
+- Live preview of converted Gherkin syntax
+- User-friendly error messages and success notifications
+
+**Using the GUI:**
+1. Click "Browse" next to "Select Source Directory" and choose the folder containing your Cypress tests
+2. Click "Browse" next to "Select Destination Directory" and choose where to save the Gherkin files
+3. Click "Start Conversion" to begin the process
+4. Monitor progress in the "Process Log" section
+5. View the converted Gherkin syntax in the "Gherkin Output Preview" section
+
+### Method 2: CLI Mode (Recommended for Automation)
+
+Run the conversion via command line:
+
+```bash
+python -m script.conversion
+```
+
+You'll be prompted to enter the directory path:
+```
+Enter the directory containing Cypress test files: /path/to/cypress/tests
+```
+
+The converted files will be saved in a `gherkin_output/` directory maintaining the original folder structure.
+
+### Method 3: Using Python Interactive Mode
+
+```python
+from script.conversion import process_directory
+
+# Process all .cy.ts files in the specified directory
+process_directory('/path/to/cypress/tests')
+```
+
+## 📝 Example Usage
+
+### Input: Cypress Test File
+
+Given a Cypress test file like the one you provided (`TC_05_duplicate_feed.cy.ts`):
+
+```javascript
+describe('Articles', { tags: ['@articles', '@home-feed'] }, () => {
+  it('Duplicate Draft Section NUMBERED LIST', () => {
+    cy.percySnapshot('duplicate_section_draft')
+    selectMenuOption({ selector: 'feeds_link' })
+    addFeedDraft({
+      path: 'goat-home-feed',
+      title: `Add Section - ${timestamp()}`
+    })
+    addSectionNumberedList({ section: 'Numbered List', index: 0 })
+    duplicateFeedDraft({ section })
+  })
+})
+```
+
+### Output: Gherkin Syntax
+
+The tool will generate a Gherkin feature file:
+
+```gherkin
+Feature: Articles Management
+
+  Background:
+    Given the user is authenticated in the CMS
+    And the user has switched to the correct namespace
+
+  Scenario: Duplicate a numbered list section in a feed draft
+    Given the user navigates to the feeds section
+    When the user creates a new feed draft with title "Add Section"
+    And the user adds a numbered list section at position 0
+    And the user duplicates the feed draft section
+    Then the section is successfully duplicated
+```
+
+## 🔧 Advanced Features
+
+### Xray Test Management Integration
+
+The `xray/test_repository/get_tests_in_folder.py` script allows you to fetch test cases from Xray Test Management:
+
+1. Configure Xray credentials in your `.env` file:
+   ```bash
+   XRAY_CLIENT_ID=your_client_id
+   XRAY_CLIENT_SECRET=your_client_secret
+   ```
+
+2. Edit the script to specify your project and folder:
+   ```python
+   project_key = "YOUR_PROJECT"
+   folder_path = "/YOUR_FOLDER"
+   ```
+
+3. Run the script:
+   ```bash
+   python xray/test_repository/get_tests_in_folder.py
+   ```
+
+This will fetch all tests from the specified Xray folder in JSON format.
+
+## 🛠️ Development
+
+### Code Quality
+
+The project uses `pylint` for code quality checks. Run linting with:
+
+```bash
+pipenv run pylint script/ data/ xray/
+```
+
+Configuration is available in `.pylintrc`.
+
+### CI/CD
+
+GitHub Actions automatically runs pylint on pull requests. See `.github/workflows/pylint.yml` for details.
+
+## 📋 Dependencies
+
+Core dependencies:
+- **openai**: OpenAI API client for GPT-4 integration
+- **python-dotenv**: Environment variable management
+- **tkinter**: GUI framework (included with Python)
+- **gql**: GraphQL client for Xray integration
+- **aiohttp**: Async HTTP client for API calls
+- **requests**: HTTP library for REST API calls
+
+See `Pipfile` for complete dependency list and versions.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Make your changes and commit: `git commit -m "Add your feature"`
+4. Push to the branch: `git push origin feature/your-feature-name`
+5. Submit a pull request
+
+## 📄 License
+
+See the [LICENSE](LICENSE) file for details.
+
+## 🐛 Troubleshooting
+
+**Issue: "OpenAI API key not found" error**
+- Solution: Ensure your `.env` file exists and contains `OPENAI_API_KEY=your_key`
+
+**Issue: "ModuleNotFoundError: No module named '_tkinter'" or GUI window doesn't appear**
+- Solution: tkinter needs to be installed separately depending on your Python installation
+- **On macOS with Homebrew Python**: `brew install python-tk@3.13` (replace 3.13 with your Python version)
+- On Ubuntu/Debian: `sudo apt-get install python3-tk`
+- On macOS with Python from python.org: tkinter is included by default
+- **Alternative**: Use CLI mode instead: `python -m script.conversion`
+
+**Issue: Conversion produces poor quality Gherkin**
+- Solution: The quality depends on the GPT-4 model's understanding. You can:
+  - Modify the prompt in `data/prompt.py` to be more specific
+  - Increase `max_tokens` in `script/conversion.py` for longer scenarios
+  - Update to a newer GPT model if available
+
+**Issue: Rate limiting from OpenAI API**
+- Solution: Add delays between requests or upgrade your OpenAI plan
