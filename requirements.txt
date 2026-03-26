@@ -1,6 +1,6 @@
 openai~=1.66.3
 dotenv~=0.9.9
 python-dotenv~=1.0.1
-requests~=2.32.4
+requests~=2.33.0
 gql~=3.5.2
 aiohttp~=3.13.3
